@@ -27,6 +27,8 @@ To create the clusters in parallel please run the executable:
 # If your executable is not working run 
 chmod +x apply.sh
 chmod +x destroy.sh
+
+# Apply exacutable
 ./apply.sh
 ```
 During execution, a log files will be generated in `logs/<user>`

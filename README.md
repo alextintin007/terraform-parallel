@@ -18,6 +18,7 @@ gcloud auth login
 ```sh
 cd terraform
 terraform init
+cd ..
 ```
 
 ## Run 

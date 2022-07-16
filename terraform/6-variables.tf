@@ -6,14 +6,8 @@ variable "machine_type" {
   default = "e2-standard-4"
 }
 
-variable "zone" {
-  default = "us-central1-c"
-}
+variable "zone" {}
 
-variable "name" {
-  default = "1"
-}
+variable "name" {}
 
-variable "email" {
-  default = "xavitintin007@gmail.com"
-}
+variable "email" {}

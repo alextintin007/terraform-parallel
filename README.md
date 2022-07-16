@@ -24,6 +24,9 @@ cd ..
 ## Run 
 To create the clusters in parallel please run the executable:
 ```sh
+# If your executable is not working run 
+chmod +x apply.sh
+chmod +x destroy.sh
 ./apply.sh
 ```
 During execution, a log files will be generated in `logs/<user>`

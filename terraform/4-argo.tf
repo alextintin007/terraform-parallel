@@ -92,6 +92,9 @@ resource "kubernetes_role_binding" "argo_server_binding" {
     kind      = "Role"
     name      = "argo-server-${var.name}-role"
   }
+  depends_on = [
+    kubernetes_cluster_role_binding.rb
+  ]
 }
 
 resource "kubernetes_cluster_role_binding" "argo_server_clusterworkflowtemplate_role_binding" {
@@ -108,6 +111,9 @@ resource "kubernetes_cluster_role_binding" "argo_server_clusterworkflowtemplate_
     kind      = "ClusterRole"
     name      = "argo-server-${var.name}-clusterworkflowtemplate-role"
   }
+  depends_on = [
+    kubernetes_cluster_role_binding.rb, kubernetes_namespace.namespace1
+  ]
 }
 
 resource "kubernetes_secret" "argo_server_sso" {
@@ -203,6 +209,6 @@ resource "kubernetes_deployment" "argo_server" {
     }
   }
   depends_on = [
-    google_container_node_pool.npool1
+    google_container_node_pool.npool1, kubernetes_service.argo_server
   ]
 }

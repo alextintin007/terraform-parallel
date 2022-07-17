@@ -17,11 +17,14 @@ resource "google_container_node_pool" "npool1" {
     machine_type = var.machine_type
     image_type   = "COS"
   }
-  node_count = 1
+  initial_node_count = 1
   autoscaling {
-    min_node_count = 1
+    min_node_count = 0
     max_node_count = 4
   }
+  depends_on = [
+    kubernetes_namespace.namespace1
+  ]
 }
 
 resource "google_compute_disk" "default" {

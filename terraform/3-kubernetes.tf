@@ -1,13 +1,3 @@
-resource "kubernetes_config_map" "nginx_conf" {
-  metadata {
-    name      = "basic-config"
-    namespace = kubernetes_namespace.namespace1.metadata.0.name
-  }
-  data = {
-    "nginx.conf" = "server {\nlocation / {\nroot /usr/share/nginx/html/;\nindex index.html;\nautoindex on;}}"
-  }
-}
-
 resource "kubernetes_deployment" "http_fileserver" {
   metadata {
     name      = "http-fileserver-${var.name}"
@@ -68,7 +58,7 @@ resource "kubernetes_deployment" "http_fileserver" {
     }
   }
   depends_on = [
-    google_container_node_pool.npool1
+    google_container_node_pool.npool1, kubernetes_service.http_fileserver, kubernetes_persistent_volume_claim.nfs_pvc
   ]
 }
 
@@ -99,11 +89,24 @@ resource "kubernetes_service" "http_fileserver" {
   ]
 }
 
+resource "kubernetes_config_map" "nginx_conf" {
+  metadata {
+    name      = "basic-config"
+    namespace = kubernetes_namespace.namespace1.metadata.0.name
+  }
+  data = {
+    "nginx.conf" = "server {\nlocation / {\nroot /usr/share/nginx/html/;\nindex index.html;\nautoindex on;}}"
+  }
+}
+
+# Terraform needs to manage K8S RBAC
+# https://cloud.google.com/kubernetes-engine/docs/how-to/role-based-access-control#iam-rolebinding-bootstrap
 resource "kubernetes_cluster_role_binding" "rb" {
   metadata {
     name = var.name
   }
   subject {
+    api_group = "rbac.authorization.k8s.io"
     kind = "User"
     name = var.email
   }
@@ -158,6 +161,9 @@ resource "kubernetes_secret" "my_minio_cred" {
     secretkey = "password"
   }
   type = "Opaque"
+  depends_on = [
+    kubernetes_namespace.namespace1
+  ]
 }
 
 resource "kubernetes_service" "minio" {
@@ -250,6 +256,6 @@ resource "kubernetes_deployment" "minio" {
     }
   }
   depends_on = [
-    google_container_node_pool.npool1
+    google_container_node_pool.npool1, kubernetes_service.minio
   ]
 }

@@ -24,19 +24,30 @@ cd ..
 ## Run 
 To create the clusters in parallel please run the executable:
 ```sh
-# If your executable is not working run 
-chmod +x apply.sh
-chmod +x destroy.sh
-
-# Apply exacutable
 ./apply.sh
 ```
-During execution, a log files will be generated in `logs/<user>`
-tfstate file will be in `s/<user>/` this can be used to update user's infrastructure
+During execution, a log files will be generated in `logs/logs-apply/<user>`
+tfstate file will be in `users/<user>/` this can be used to update user's infrastructure
 
 ## Destroy
 To destroy the clusters alongside the infrastructure of all the participants run:
 ```sh
 ./destroy.sh
 ```
+During execution, a log files will be generated in `logs/logs-destroy/<user>`
 
+# Note
+Argo is already installed but to submit worksflows you must first run:
+```sh
+# Download the binary
+curl -sLO https://github.com/argoproj/argo/releases/download/v2.11.1/argo-linux-amd64.gz
+
+# Unzip
+gunzip argo-linux-amd64.gz
+
+# Make binary executable
+chmod +x argo-linux-amd64
+
+# Move binary to path
+sudo mv ./argo-linux-amd64 /usr/local/bin/argo
+```
